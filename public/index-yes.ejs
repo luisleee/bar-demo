@@ -1,12 +1,36 @@
 <!DOCTYPE html>
+
 <head>
     <meta charset="UTF-8">
     <title>Bar</title>
+    <link rel="stylesheet" type="text/css" href="index.css">
 </head>
+
 <body>
     <h1>Welcome!</h1>
     <p>Welcome to the bar!</p>
     <p>Hi, <%- username %>!</p>
     <p><a href="/logout">logout</a></p>
+    <hr>
+    <p>Share your ideas here!</p>
+    <form action="/send" method="POST">
+        <fieldset>
+            <legend>Write something</legend>
+            <p>Your message:</p>
+            <textarea name="message"></textarea>
+            <button>Send!</button>
+        </fieldset>
+    </form>
+
+    <div id="messages">
+        <% messages.forEach(obj => { %>
+        <div class="msg">
+            <p><strong><%- obj.user %></strong>: </p>
+            <blockquote><%- obj.message %></blockquote>
+            <p><em><%- obj.time %> </em></p>
+        </div>
+        <% }) %>
+    </div>
 </body>
+
 </html>

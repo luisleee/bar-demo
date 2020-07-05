@@ -1,0 +1,11 @@
+#messages{
+    margin-top: 10px;
+}
+
+.msg {
+    border: 1px solid #afafaf;
+    border-radius: 20px;
+    background-color: #afafaf;
+    margin: 5px;
+    padding: 5px;
+}
