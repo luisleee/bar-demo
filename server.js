@@ -1,202 +1,103 @@
-const connect = require("connect");
-const logger = require("morgan");
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const session = require("express-session");
-const http = require("http");
 const fs = require("fs");
 const ejs = require("ejs");
-const static = require("serve-static");
+const { join } = require("path");
+const logger = require("morgan");
+const express = require("express");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
 
-var app = connect();
+var app = express();
+app.engine(".ejs", ejs.renderFile);
 app.use(logger("dev"));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({ secret: "GMW", saveUninitialized: true, resave: true }));
+app.use(session({ secret: "secret", saveUninitialized: true, resave: true }));
 
-//TODO: Use express to rewrite it
-//TODO: Split them into modules
+// TODO: Split them into modules
+// TODO: Improve the DB
+// TODO: Refresh it immediately by WS
 
-app.use(function (req, res, next) {
-    if (req.url === "/" && req.session.loggedIn) {
+function isLogin(req, res, next) {
+    if (!req.session.loggedIn) {
+        return next("route");
+    }
+    next();
+}
+
+app.get("/", function (req, res, next) {
+    if (req.session.loggedIn) {
         var messages = require("./message.json");
         var data = {
             username: req.session.name,
             messages: messages.messages,
         };
-        ejs.renderFile("public/index-yes.ejs", data, function (err, str) {
-            if (err) {
-                console.log(err);
-                res.writeHead(500);
-                res.end();
-                return;
-            }
-            res.writeHead(200, { "Content-Type": "text/html" });
-            res.end(str);
-        });
+        res.render(join(__dirname, "pages/index-yes.ejs"), data);
     } else {
-        next();
+        res.sendFile(join(__dirname, "pages/index-not.html"));
     }
 });
 
-app.use(function (req, res, next) {
-    if (req.url === "/" && req.method === "GET") {
-        fs.readFile("public/index-not.html", function (err, buff) {
-            if (err) {
-                console.log(err);
-                res.writeHead(500);
-                res.end();
-                return;
-            }
-            res.writeHead(200, { "Content-Type": "text/html" });
-            var str = buff.toString();
-            res.end(str);
-        });
+app.post("/login", function (req, res, next) {
+    var passwd = require("./passwd.json");
+    if (!passwd[req.body.user] || req.body.password !== passwd[req.body.user]) {
+        res.sendFile(join(__dirname, "pages/bad-passwd.html"));
     } else {
-        next();
+        req.session.loggedIn = true;
+        req.session.name = req.body.user;
+        res.redirect("/");
     }
 });
 
-app.use(function (req, res, next) {
-    if (req.url === "/login" && req.method === "POST") {
-        var passwd = require("./passwd.json");
-        if (
-            !passwd[req.body.user] ||
-            req.body.password !== passwd[req.body.user]
-        ) {
-            fs.readFile("public/bad-passwd.html", function (err, buff) {
-                if (err) {
-                    console.log(err);
-                    res.writeHead(500);
-                    res.end();
-                    return;
-                }
-                res.writeHead(200, { "Content-Type": "text/html" });
-                var str = buff.toString();
-                res.end(str);
-            });
-        } else {
-            fs.readFile("public/login.html", function (err, buff) {
-                if (err) {
-                    console.log(err);
-                    res.writeHead(500);
-                    res.end();
-                    return;
-                }
-                req.session.loggedIn = true;
-                req.session.name = req.body.user;
-                res.writeHead(200, { "Content-Type": "text/html" });
-                var str = buff.toString();
-                res.end(str);
-            });
+app.get("/logout", isLogin, function (req, res, next) {
+    req.session.loggedIn = false;
+    res.redirect("/");
+});
+
+app.post("/register", function (req, res) {
+    var passwd = require("./passwd.json");
+    if (passwd[req.body.user]) {
+        res.sendFile(join(__dirname, "pages/alredy-exist.html"));
+    } else {
+        passwd[req.body.user] = req.body.password;
+        var json = JSON.stringify(passwd);
+        fs.writeFile("./passwd.json", json, function (err) {
+            if (err) {
+                return next(err);
+            }
+            res.sendFile(join(__dirname, "pages/registered.html"));
+        });
+    }
+});
+
+app.post("/send", isLogin, function (req, res, next) {
+    var name = req.session.name;
+    var msg = req.body.message;
+    var time = new Date().toLocaleString();
+    var obj = {
+        time: time,
+        message: msg,
+        user: name,
+    };
+    var original = require("./message.json");
+    original.messages.unshift(obj);
+    var json = JSON.stringify(original);
+    fs.writeFile("message.json", json, function (err) {
+        if (err) {
+            return next(err);
         }
-    } else {
-        next();
-    }
+        res.redirect("/");
+    });
 });
 
-app.use(function (req, res, next) {
-    if (req.url === "/logout") {
-        fs.readFile("public/logout.html", function (err, buff) {
-            if (err) {
-                console.log(err);
-                res.writeHead(500);
-                res.end();
-                return;
-            }
-            req.session.loggedIn = false;
-            res.writeHead(200, { "Content-Type": "text/html" });
-            var str = buff.toString();
-            res.end(str);
-        });
-    } else {
-        next();
-    }
+app.use(express.static("public"));
+
+app.use(function (err, req, res, next) {
+    console.error(err);
+    res.status(500).send("Error!!!");
+    next();
 });
 
-app.use(function (req, res, next) {
-    if (req.url === "/register" && req.method === "POST") {
-        var passwd = require("./passwd.json");
-        if (passwd[req.body.user]) {
-            fs.readFile("public/already-exist.html", function (err, buff) {
-                if (err) {
-                    console.log(err);
-                    res.writeHead(500);
-                    res.end();
-                    return;
-                }
-                res.writeHead(200, { "Content-Type": "text/html" });
-                var str = buff.toString();
-                res.end(str);
-            });
-        } else {
-            passwd[req.body.user] = req.body.password;
-            var json = JSON.stringify(passwd);
-            fs.writeFile("./passwd.json", json, function (err) {
-                if (err) {
-                    console.log(err);
-                    res.writeHead(500);
-                    res.end();
-                    return;
-                }
-                fs.readFile("public/registered.html", function (err, buff) {
-                    if (err) {
-                        console.log(err);
-                        res.writeHead(500);
-                        res.end();
-                        return;
-                    }
-                    res.writeHead(200, { "Content-Type": "text/html" });
-                    var str = buff.toString();
-                    res.end(str);
-                });
-            });
-        }
-    } else {
-        next();
-    }
-});
-
-app.use(function (req, res, next) {
-    if (req.url === "/send" && req.method === "POST" && req.session.loggedIn) {
-        var name = req.session.name;
-        var msg = req.body.message;
-        var time = new Date().toLocaleString();
-        var obj = {
-            time: time,
-            message: msg,
-            user: name,
-        };
-        var original = require("./message.json");
-        original.messages.unshift(obj);
-        var json = JSON.stringify(original);
-        fs.writeFile("message.json", json, function (err) {
-            if (err) {
-                console.log(err);
-                res.writeHead(500);
-                res.end();
-                return;
-            }
-            fs.readFile("public/sended.html", function (err, buff) {
-                if (err) {
-                    console.log(err);
-                    res.writeHead(500);
-                    res.end();
-                    return;
-                }
-                res.writeHead(200, { "Content-Type": "text/html" });
-                var str = buff.toString();
-                res.end(str);
-            });
-        });
-    } else {
-        next();
-    }
-});
-
-app.use(static("www"));
-
-var server = http.createServer(app);
-server.listen("3000", function () {
+app.listen("3000", function () {
     console.log("OK");
 });

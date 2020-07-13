@@ -1,1 +1,7 @@
-{"messages":[]}
+{
+    "messages": [{
+        "time": "2020-7-13 18:44:23",
+        "message": "Hello world!",
+        "user": "root"
+    }]
+}
