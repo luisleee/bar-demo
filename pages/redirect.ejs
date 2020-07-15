@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title><%= text %> </title>
+</head>
+
+<body>
+    <h1><%= text %> </h1>
+    <script>
+        setTimeout(function () {
+            window.location.href = "<%= url %>";
+        }, <%- Number(time) * 1000 %> );
+    </script>
+</body>
+
+</html>
