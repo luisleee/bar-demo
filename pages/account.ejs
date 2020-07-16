@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Account Center</title>
+</head>
+
+<body>
+    <h1>Account Center</h1>
+    <hr>
+    <p>Username: <%- name %></p>
+    <p><a href="/logout">logout</a></p>
+
+    <form action="/change-password" method="POST">
+        <fieldset>
+            <legend>Change Password</legend>
+            <p>Old password:<input type="password" name="oldPass"></p>
+            <p>New password:<input type="password" name="newPass"></p>
+            <button>Change</button>
+        </fieldset>
+    </form>
+
+    <form action="/delete" method="POST">
+        <fieldset style="color: red;">
+            <legend>Dangerous Zone</legend>
+            <button>Delete Account</button>
+        </fieldset>
+    </form>
+
+</body>
+
+</html>

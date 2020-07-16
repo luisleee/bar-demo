@@ -1,4 +1,4 @@
-const ejs = require("ejs");
+const md5 = require("md5");
 const init = require("./init");
 const { join } = require("path");
 const logger = require("morgan");
@@ -11,9 +11,7 @@ const sqliteStoreFactory = require("connect-sqlite3");
 const sqliteStore = sqliteStoreFactory(session);
 
 var app = express();
-app.engine(".ejs", ejs.renderFile);
 app.use(logger("dev"));
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
@@ -27,37 +25,35 @@ app.use(
 
 // TODO: Split them into modules
 // TODO: Refresh it immediately by WS
-// TODO: Encrypt the password
 // TODO: Adjust stylesheet
-// TODO: Add delete account and change password feature
 
-function isLogin(req, res, next) {
+// Check if the user has logged-in
+// If not, redirect to login
+function isLoggedIn(req, res, next) {
     if (!req.session.loggedIn) {
-        return next("route");
+        res.redirect("/login-page.html");
+    } else {
+        next();
     }
-    next();
 }
 
-app.get("/", function (req, res, next) {
-    if (req.session.loggedIn) {
-        var messagesDB = new Database("messages.db", function (err) {
+// The main page, must be loggedin
+app.get("/", isLoggedIn, function (req, res, next) {
+    var messagesDB = new Database("messages.db", function (err) {
+        if (err) {
+            return next(err);
+        }
+        messagesDB.all("SELECT * FROM messages", function (err, rows) {
             if (err) {
                 return next(err);
             }
-            messagesDB.all("SELECT * FROM messages", function (err, rows) {
-                if (err) {
-                    return next(err);
-                }
-                var data = {
-                    username: req.session.name,
-                    messages: rows.reverse(),
-                };
-                res.render(join(__dirname, "pages/index-yes.ejs"), data);
-            });
+            var data = {
+                username: req.session.name,
+                messages: rows.reverse(),
+            };
+            res.render(join(__dirname, "pages/index.ejs"), data);
         });
-    } else {
-        res.sendFile(join(__dirname, "pages/index-not.html"));
-    }
+    });
 });
 
 app.post("/login", function (req, res, next) {
@@ -72,13 +68,13 @@ app.post("/login", function (req, res, next) {
                 if (err) {
                     return next(err);
                 }
-                if (!row || row.password !== req.body.password) {
-                    var url = qs.stringify({
+                if (!row || row.password !== md5(req.body.password)) {
+                    var qstr = qs.stringify({
                         time: 1,
                         text: "Bad username or password!!!",
-                        url: "/",
+                        url: "/login-page.html",
                     });
-                    res.redirect("/redirect?" + url);
+                    res.redirect("/redirect?" + qstr);
                 } else {
                     req.session.loggedIn = true;
                     req.session.name = req.body.user;
@@ -89,7 +85,7 @@ app.post("/login", function (req, res, next) {
     });
 });
 
-app.get("/logout", isLogin, function (req, res, next) {
+app.get("/logout", isLoggedIn, function (req, res, next) {
     req.session.loggedIn = false;
     res.redirect("/");
 });
@@ -120,17 +116,17 @@ app.post("/register", function (req, res) {
                     usersDB.run(
                         "INSERT INTO users (name, password) VALUES (?, ?)",
                         req.body.user,
-                        req.body.password,
+                        md5(req.body.password),
                         function (err) {
                             if (err) {
                                 return next(err);
                             }
-                            var url = qs.stringify({
+                            var qstr = qs.stringify({
                                 time: 1,
                                 text: "Registered",
-                                url: "/",
+                                url: "/login-page.html",
                             });
-                            res.redirect("/redirect?" + url);
+                            res.redirect("/redirect?" + qstr);
                         }
                     );
                 }
@@ -139,7 +135,87 @@ app.post("/register", function (req, res) {
     });
 });
 
-app.post("/send", isLogin, function (req, res, next) {
+app.post("/delete", isLoggedIn, function (req, res, next) {
+    var usersDB = new Database("users.db", function (err) {
+        if (err) {
+            return next(err);
+        }
+        usersDB.run(
+            "DELETE FROM users WHERE name == ?",
+            req.session.name,
+            function (err) {
+                if (err) {
+                    return next(err);
+                }
+                req.session.loggedIn = false;
+                res.redirect("/");
+            }
+        );
+    });
+});
+
+app.post("/change-password", isLoggedIn, function (req, res, next) {
+    if (!req.body.oldPass || !req.body.newPass) {
+        var qstr = qs.stringify({
+            time: 1,
+            text: "No password",
+            url: "/account",
+        });
+        res.redirect("/redirect?" + qstr);
+        return;
+    }
+    var usersDB = new Database("users.db", function (err) {
+        if (err) {
+            return next(err);
+        }
+        usersDB.get(
+            "SELECT * FROM users WHERE name == ?",
+            req.session.name,
+            function (err, row) {
+                if (err) {
+                    return next(err);
+                }
+                if (!row) {
+                    return next(err);
+                }
+                if (row.password !== md5(req.body.oldPass)) {
+                    var qstr = qs.stringify({
+                        time: 1,
+                        text: "Bad password",
+                        url: "/account",
+                    });
+                    res.redirect("/redirect?" + qstr);
+                    return;
+                }
+                usersDB.run(
+                    "UPDATE users SET password = ? WHERE name = ?",
+                    md5(req.body.newPass),
+                    req.session.name,
+                    function (err) {
+                        if (err) {
+                            return next(err);
+                        }
+                        var qstr = qs.stringify({
+                            time: 1,
+                            text: "Password changed!",
+                            url: "/account",
+                        });
+                        res.redirect("/redirect?" + qstr);
+                        return;
+                    }
+                );
+            }
+        );
+    });
+});
+
+app.get("/account", isLoggedIn, function (req, res, next) {
+    var context = { name: req.session.name };
+    res.render(join(__dirname, "pages/account.ejs"), context);
+});
+
+// Send message
+app.post("/send", isLoggedIn, function (req, res, next) {
     var messagesDB = new Database("messages.db", function (err) {
         if (err) {
             return next(err);
@@ -165,6 +241,7 @@ app.post("/send", isLogin, function (req, res, next) {
     });
 });
 
+// Redirect page
 app.get("/redirect", function (req, res, next) {
     var url = req.query.url ? req.query.url : "/";
     var time = req.query.time ? req.query.time : 1;
@@ -173,8 +250,16 @@ app.get("/redirect", function (req, res, next) {
     res.render(join(__dirname, "pages/redirect.ejs"), context);
 });
 
+// Deploy static files
 app.use(express.static("public"));
 
+// Handle 404
+app.use(function (req, res, next) {
+    res.redirect("/404.html");
+    next();
+});
+
+// Handle error and send 500
 app.use(function (err, req, res, next) {
     console.error(err);
     res.status(500).send("Error!!!");
