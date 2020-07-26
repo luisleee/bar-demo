@@ -3,9 +3,10 @@
 }
 
 .msg {
-    border: 1px solid #afafaf;
+    border: 1px solid #b8b8b8;
     border-radius: 20px;
-    background-color: #afafaf;
+    background-color: #b8b8b8;
     margin: 5px;
     padding: 5px;
 }
+

@@ -9,7 +9,7 @@
 <body>
     <h1>Welcome!</h1>
     <p>Welcome to the bar!</p>
-    <p>Hi, <%- username %>!</p>
+    <p>Hi, <%= username %>!</p>
     <p><a href="/account">Account Center</a></p>
     <hr>
     <p>Share your ideas here!</p>
@@ -25,12 +25,15 @@
     <div id="messages">
         <% messages.forEach(obj => { %>
         <div class="msg">
-            <p><strong><%- obj.user %></strong>: </p>
-            <blockquote><%- obj.message %></blockquote>
-            <p><em><%- obj.time %> </em></p>
+            <p><%= obj.user %>: </p>
+            <blockquote><%= obj.message %></blockquote>
+            <p><%- obj.time %></p>
         </div>
         <% }) %>
     </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/index.js"></script>
 </body>
 
 </html>

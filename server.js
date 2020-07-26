@@ -1,6 +1,8 @@
 const md5 = require("md5");
 const init = require("./init");
+const http = require("http");
 const { join } = require("path");
+const socketIO = require("socket.io");
 const logger = require("morgan");
 const qs = require("querystring");
 const express = require("express");
@@ -11,6 +13,8 @@ const sqliteStoreFactory = require("connect-sqlite3");
 const sqliteStore = sqliteStoreFactory(session);
 
 var app = express();
+var server = http.createServer(app);
+var io = socketIO(server);
 app.use(logger("dev"));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -24,7 +28,6 @@ app.use(
 );
 
 // TODO: Split them into modules
-// TODO: Refresh it immediately by WS
 // TODO: Adjust stylesheet
 
 // Check if the user has logged-in
@@ -35,6 +38,20 @@ function isLoggedIn(req, res, next) {
     } else {
         next();
     }
+}
+
+function timeTemplate() {
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes() + 1;
+    var second = now.getSeconds() + 1;
+
+    var dateString = [year, month, date].join("-");
+    var timeString = [hour, minute, second].join(":");
+    return dateString + " " + timeString;
 }
 
 // The main page, must be loggedin
@@ -222,7 +239,8 @@ app.post("/send", isLoggedIn, function (req, res, next) {
         }
         var name = req.session.name;
         var msg = req.body.message;
-        var time = new Date().toLocaleString();
+        var time = timeTemplate();
+        
         if (!msg) {
             return next(err);
         }
@@ -235,6 +253,7 @@ app.post("/send", isLoggedIn, function (req, res, next) {
                 if (err) {
                     return next(err);
                 }
+                io.emit("message", name, msg, time);
                 res.redirect("/");
             }
         );
@@ -271,7 +290,7 @@ init(function (err) {
         console.log(err);
         return;
     }
-    app.listen("3000", function () {
+    server.listen("3000", function () {
         console.log("OK");
     });
 });
