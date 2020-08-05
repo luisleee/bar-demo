@@ -10,7 +10,7 @@ const { Database } = require("sqlite3");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const sqliteStoreFactory = require("connect-sqlite3");
-const sqliteStore = sqliteStoreFactory(session);
+const SqliteStore = sqliteStoreFactory(session);
 
 var app = express();
 var server = http.createServer(app);
@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
     session({
-        store: new sqliteStore(),
+        store: new SqliteStore(),
         secret: "secret",
         saveUninitialized: true,
         resave: true,
@@ -107,7 +107,7 @@ app.get("/logout", isLoggedIn, function (req, res, next) {
     res.redirect("/");
 });
 
-app.post("/register", function (req, res) {
+app.post("/register", function (req, res, next) {
     var usersDB = new Database("users.db", function (err) {
         if (err) {
             return next(err);
