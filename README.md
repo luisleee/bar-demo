@@ -1,2 +1,3 @@
-# The bar
-A login system.
+# bar-demo
+
+A bar.

@@ -29,6 +29,7 @@ app.use(
 
 // TODO: Split them into modules
 // TODO: Adjust stylesheet
+// TODO: Handle reply
 
 // Check if the user has logged-in
 // If not, redirect to login
@@ -69,6 +70,28 @@ app.get("/", isLoggedIn, function (req, res, next) {
                 messages: rows.reverse(),
             };
             res.render(join(__dirname, "pages/index.ejs"), data);
+        });
+    });
+});
+
+app.get("/p/:id", function (req, res, next) {
+    var id = req.params.id;
+    var messagesDB = new Database("messages.db", function (err) {
+        if (err) {
+            return next(err);
+        }
+        messagesDB.get("SELECT * FROM messages WHERE id = ?", id, function (
+            err,
+            row
+        ) {
+            if (err) {
+                return next(err);
+            }
+            if (!row) {
+                res.redirect("/404.html");
+                return;
+            }
+            res.render(join(__dirname, "pages/p.ejs"), row);
         });
     });
 });
@@ -238,23 +261,37 @@ app.post("/send", isLoggedIn, function (req, res, next) {
             return next(err);
         }
         var name = req.session.name;
+        var title = req.body.title;
         var msg = req.body.message;
         var time = timeTemplate();
-        
+
         if (!msg) {
             return next(err);
         }
         messagesDB.run(
-            "INSERT INTO messages (user, message, time) VALUES (?, ?, ?)",
+            "INSERT INTO messages (user, title, message, time) VALUES (?, ?, ?, ?)",
             name,
+            title,
             msg,
             time,
             function (err) {
                 if (err) {
                     return next(err);
                 }
-                io.emit("message", name, msg, time);
-                res.redirect("/");
+                messagesDB.get(
+                    "SELECT id FROM messages WHERE user = ? AND title = ? AND message = ? AND time = ?",
+                    user,
+                    title,
+                    message,
+                    time,
+                    function (err, row) {
+                        if (err) {
+                            return next(err);
+                        }
+                        io.emit("message", row.id, name, title, msg, time);
+                        res.redirect("/");
+                    }
+                );
             }
         );
     });

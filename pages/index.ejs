@@ -7,33 +7,36 @@
 </head>
 
 <body>
-    <h1>Welcome!</h1>
-    <p>Welcome to the bar!</p>
-    <p>Hi, <%= username %>!</p>
-    <p><a href="/account">Account Center</a></p>
-    <hr>
-    <p>Share your ideas here!</p>
-    <form action="/send" method="POST">
-        <fieldset>
-            <legend>Write something</legend>
-            <p>Your message:</p>
-            <textarea name="message"></textarea>
-            <button>Send!</button>
-        </fieldset>
-    </form>
+    <%- include("header") -%>
+    <div id="mainbox">
+        <h1 id="welcome">Welcome!</h1>
+        <p>Share your ideas here!</p>
+        <p id="greet">Hi, <%= username %>!</p>
+        <hr>
+        <form action="/send" method="POST">
+            <fieldset>
+                <legend>Write something</legend>
+                <p>Your title: <input type="text" name="title"></p>
+                <p>Your message:</p>
+                <textarea name="message"></textarea>
+                <button>Send!</button>
+            </fieldset>
+        </form>
 
-    <div id="messages">
-        <% messages.forEach(obj => { %>
-        <div class="msg">
-            <p><%= obj.user %>: </p>
-            <blockquote><%= obj.message %></blockquote>
-            <p><%- obj.time %></p>
+        <div id="messages">
+            <% messages.forEach(obj => { %>
+            <div class="msg">
+                <p><a href="/p/<%= obj.id %>"><%= obj.title %></a></p>
+                <blockquote><%= obj.message.substr(0,10).concat("...") %></blockquote>
+                <p><%= obj.user + " | " + obj.time %></p>
+            </div>
+            <% }) %>
         </div>
-        <% }) %>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/index.js"></script>
+    <%- include("footer") -%>
+    <%- include("script") -%>
+
 </body>
 
 </html>

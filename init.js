@@ -9,7 +9,7 @@ function initUsers(fn) {
                 return fn(err);
             }
             DB.run(
-                "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT,password TEXT)",
+                "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, password TEXT)",
                 function (err) {
                     if (err) {
                         return fn(err);
@@ -35,7 +35,7 @@ function initMessages(fn) {
                 return fn(err);
             }
             DB.run(
-                "CREATE TABLE messages (id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, message TEXT, time TEXT)",
+                "CREATE TABLE messages (id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, title TEXT, message TEXT, time TEXT)",
                 function (err) {
                     if (err) {
                         return fn(err);
