@@ -3,21 +3,32 @@
 
 <head>
     <meta charset="UTF-8">
-    <title><%= title %></title>
-    <link rel="stylesheet" type+"text/css" href="/index.css">
-    <link rel="stylesheet" type+"text/css" href="/p.css">
+    <title><%= message.title %></title>
+    <link rel="stylesheet" type="text/css" href="/generic.css">
+    <link rel="stylesheet" type="text/css" href="/header.css">
+    <link rel="stylesheet" type="text/css" href="/reload.css">
+    <link rel="stylesheet" type="text/css" href="/p.css">
+    <link rel="stylesheet" type="text/css" href="/footer.css">
 </head>
 
 <body>
     <%- include("header") -%>
-
+    <%- include("reload") -%>
     <div id="mainbox">
-        <div id = "main-msg">
-            <h1><%= title %></h1>
-            <p><em><%= user %> | <%= time %></em></p>
-            <p><%= message %></p>
+        <div id="main-msg">
+            <h1><%= message.title %></h1>
+            <p><em><%= message.user %> | <%= message.time %></em></p>
+            <p><%= message.message %></p>
         </div>
-        <form method="POST" action="/reply">
+
+        <% if (replies) { %>
+        <% replies.forEach(reply => { %>
+        <p><em><%= reply.user %> | <%= reply.time %></em></p>
+        <p><%= reply.message %></p>
+        <% }) %>
+        <% } %>
+
+        <form method="POST" action="/reply/<%= message.id %>">
             <fieldset>
                 <legend>Reply</legend>
                 <textarea name="message"></textarea>
@@ -27,6 +38,19 @@
     </div>
 
     <%- include("footer") -%>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        function reload() {
+            location.reload();
+        }
+
+        socket.on("reload<%= message.id %>", function () {
+            var div = document.getElementById("reload");
+            div.style.display = "block";
+        });
+    </script>
 </body>
 
 </html>

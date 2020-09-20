@@ -14,8 +14,8 @@ function initUsers(fn) {
                     if (err) {
                         return fn(err);
                     }
-                    DB.close(function(err){
-                        if(err){
+                    DB.close(function (err) {
+                        if (err) {
                             return fn(err);
                         }
                         return fn(null);
@@ -40,8 +40,22 @@ function initMessages(fn) {
                     if (err) {
                         return fn(err);
                     }
-                    DB.close(function(err){
-                        if(err){
+                    DB.close(function (err) {
+                        if (err) {
+                            return fn(err);
+                        }
+                        return fn(null);
+                    });
+                }
+            );
+            DB.run(
+                "CREATE TABLE replies (id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, message TEXT, fa INTEGER, time TEXT)",
+                function (err) {
+                    if (err) {
+                        return fn(err);
+                    }
+                    DB.close(function (err) {
+                        if (err) {
                             return fn(err);
                         }
                         return fn(null);

@@ -1,0 +1,2 @@
+#!/bin/bash
+node src/index.js --max-nex-space-size=1024 --max-old-space-size=2000

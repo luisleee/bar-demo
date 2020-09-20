@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Bar</title>
+    <link rel="stylesheet" type="text/css" href="generic.css">
+    <link rel="stylesheet" type="text/css" href="header.css">
+    <link rel="stylesheet" type="text/css" href="reload.css">
     <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="stylesheet" type="text/css" href="footer.css">
 </head>
 
 <body>
     <%- include("header") -%>
+    <%- include("reload") -%>
     <div id="mainbox">
         <h1 id="welcome">Welcome!</h1>
         <p>Share your ideas here!</p>
@@ -35,7 +40,19 @@
     </div>
 
     <%- include("footer") -%>
-    <%- include("script") -%>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        function reload() {
+            location.reload();
+        }
+
+        socket.on("reload", function () {
+            var div = document.getElementById("reload");
+            div.style.display = "block";
+        });
+    </script>
 
 </body>
 

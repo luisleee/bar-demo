@@ -1,0 +1,44 @@
+a {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+hr {
+    margin: 15px 0;
+    border: 0;
+    height: 4px;
+    background-image: linear-gradient(
+        to right,
+        red,
+        orange,
+        yellow,
+        green,
+        cyan,
+        blue,
+        purple
+    );
+}
+
+#mainbox {
+    margin: 10px;
+}
+
+
+form p {
+    margin: 5px;
+}
+
+form textarea {
+    margin: 5px;
+    height: 100px;
+    width: 500px;
+}
+
+
+body {
+    height: 100vh;
+    margin: 0;
+}

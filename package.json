@@ -1,6 +1,6 @@
 {
     "name": "bar-demo",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "private": true,
     "dependencies": {
         "connect-sqlite3": "^0.9.11",
@@ -12,6 +12,10 @@
         "morgan": "^1.10.0",
         "socket.io": "^2.3.0",
         "sqlite3": "^5.0.0"
+    },
+    "bin": "./bin/bar-demo",
+    "scripts": {
+        "start": "./bin/bar-demo"
     },
     "license": "GPL-3.0-or-later"
 }

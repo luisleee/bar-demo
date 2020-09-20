@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Bar</title>
+    <link rel="stylesheet" type="text/css" href="login.css">
+</head>
+
+<body>
+    <header>
+        <h1>bar-demo</h1>
+    </header>
+    <div id="main">
+        <div id="container">
+            <div id="inner">
+                <h1>Welcome!</h1>
+                <ul id="tab">
+                    <div id="tab-login" class="tab-active">Login</div>
+                    <div id="tab-register" class="tab-hide">Register</div>
+                </ul>
+                <div id="forms">
+                    <div id="login" class="active">
+                        <form action="/login" method="POST">
+                            <p><input type="text" name="user" placeholder="username" required></p>
+                            <p><input type="password" name="password" placeholder="password" required>
+                            </p>
+                            <button type="submit">Login</button>
+                        </form>
+                    </div>
+                    <div id="register" class="hide">
+                        <form action="/register" method="POST">
+                            <p><input type="text" name="user" pattern="[a-zA-Z][\w]{1,9}" placeholder="username"
+                                    required></p>
+                            <p><input type="password" name="password" pattern=".{6,16}" placeholder="password" required>
+                            </p>
+                            <button type="submit">Register</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>Powered by <a href="https://github.com/luisleee/bar-demo">bar-demo</a></p>
+    </footer>
+
+    <script src="login.js"></script>
+</body>
+
+</html>

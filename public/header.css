@@ -1,0 +1,29 @@
+header {
+    height: 110px;
+    display: flex;
+    justify-content: space-between;
+    background-color: green;
+    background-image: linear-gradient(to top right, #7ed957, #3e8138);
+}
+
+header h1 {
+    margin: 0;
+    line-height: 90px;
+}
+
+header a {
+    color: black;
+}
+
+header a:visited {
+    color: black;
+}
+
+.top {
+    display: table-cell;
+    margin: 10px;
+}
+
+#account {
+    text-align: right;
+}

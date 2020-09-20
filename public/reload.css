@@ -1,0 +1,13 @@
+#reload {
+    display: none;
+    position: sticky;
+    top: 0;
+    height: 50px;
+    padding: 2px 10px;
+    background-color: #dbedfe;
+}
+
+#reload p {
+    margin: 0;
+    line-height: 50px;
+}

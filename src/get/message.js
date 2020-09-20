@@ -1,0 +1,34 @@
+const { Database } = require("sqlite3");
+const { join } = require("path");
+function message(req, res, next) {
+    var id = req.params.id;
+    var messagesDB = new Database("messages.db", function (err) {
+        if (err) {
+            return next(err);
+        }
+        messagesDB.get("SELECT * FROM messages WHERE id = ?", id, function (
+            err,
+            row
+        ) {
+            if (err) {
+                return next(err);
+            }
+            if (!row) {
+                res.redirect("/404.html");
+                return;
+            }
+            var context = { message: row };
+            messagesDB.all("SELECT * FROM replies WHERE fa = ?", id, function (
+                err,
+                rows
+            ) {
+                if (err) {
+                    return next(err);
+                }
+                context.replies = rows;
+                res.render(join(__dirname, "../../pages/p.ejs"), context);
+            });
+        });
+    });
+}
+module.exports = message;
