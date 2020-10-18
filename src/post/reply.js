@@ -20,8 +20,8 @@ function reply(req, res, next) {
                 if (err) {
                     return next(err);
                 }
-                emitter.getEmitter().emit("reload" + id);
-                res.redirect("/p/" + id);
+                emitter.getEmitter().emit("reload /topic/" + id);
+                res.redirect("/topic/" + id);
             }
         );
     });

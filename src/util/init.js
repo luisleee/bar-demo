@@ -35,7 +35,7 @@ function initMessages(fn) {
                 return fn(err);
             }
             DB.run(
-                "CREATE TABLE messages (id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, title TEXT, message TEXT, time TEXT)",
+                "CREATE TABLE topics (id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, title TEXT, text TEXT, time TEXT)",
                 function (err) {
                     if (err) {
                         return fn(err);

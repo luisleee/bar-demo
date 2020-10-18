@@ -5,13 +5,13 @@ function homepage(req, res, next) {
         if (err) {
             return next(err);
         }
-        messagesDB.all("SELECT * FROM messages", function (err, rows) {
+        messagesDB.all("SELECT * FROM topics", function (err, rows) {
             if (err) {
                 return next(err);
             }
             var data = {
                 username: req.session.name,
-                messages: rows.reverse(),
+                topics: rows.reverse(),
             };
             res.render(join(__dirname, "../../pages/index.ejs"), data);
         });

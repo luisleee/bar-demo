@@ -5,9 +5,15 @@
     height: 50px;
     padding: 2px 10px;
     background-color: #dbedfe;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 #reload p {
     margin: 0;
     line-height: 50px;
+}
+
+#reload-cross {
+    flex: right;
 }

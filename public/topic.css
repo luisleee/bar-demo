@@ -3,12 +3,12 @@ body {
     grid-template-rows: auto 1fr auto;
 }
 
-#main-msg {
+#main-topic {
     border: 5px solid;
     border-image: linear-gradient(to bottom right, #50b050, #50d050) 1 stretch;
     padding: 0 10px;
 }
 
-#main-msg h1{
+#main-topic h1{
     margin: 0;
 }

@@ -10,7 +10,7 @@ const SqliteStore = sqliteStoreFactory(session);
 const init = require("./util/init");
 const isLogin = require("./util/isLogin");
 const emitter = require("./util/emitter");
-const message = require("./get/message");
+const topic = require("./get/topic");
 const homepage = require("./get/homepage");
 const reply = require("./post/reply");
 const login = require("./post/login");
@@ -45,8 +45,8 @@ app.use(
 // The main page, must be loggedin
 app.get("/", isLogin, homepage);
 
-// Show the message
-app.get("/p/:id", message);
+// Show the topics
+app.get("/topic/:id", topic);
 
 // Logout
 app.get("/logout", isLogin, logout);
@@ -57,7 +57,7 @@ app.get("/account", isLogin, account);
 // Redirect page
 app.get("/redirect", redirect);
 
-// Reply the message
+// Reply the topic
 app.post("/reply/:id", reply);
 
 // Login
@@ -73,7 +73,7 @@ app.post("/delete", isLogin, deleteUser);
 // Change password
 app.post("/change-password", isLogin, changePassword);
 
-// Send message
+// Send a topic
 app.post("/send", isLogin, send);
 
 // Deploy static files

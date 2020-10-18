@@ -11,6 +11,7 @@
 </head>
 
 <body>
+    <script src="/socket.io/socket.io.js"></script>
     <%- include("header") -%>
     <%- include("reload") -%>
     <div id="mainbox">
@@ -23,37 +24,22 @@
                 <legend>Write something</legend>
                 <p>Your title: <input type="text" name="title"></p>
                 <p>Your message:</p>
-                <textarea name="message"></textarea>
+                <textarea name="text"></textarea>
                 <button>Send!</button>
             </fieldset>
         </form>
 
-        <div id="messages">
-            <% messages.forEach(obj => { %>
-            <div class="msg">
-                <p><a href="/p/<%= obj.id %>"><%= obj.title %></a></p>
-                <blockquote><%= obj.message.substr(0,10).concat("...") %></blockquote>
+        <div id="topics">
+            <% topics.forEach(obj => { %>
+            <div class="topic">
+                <p><a href="/topic/<%= obj.id %>"><%= obj.title %></a></p>
+                <blockquote><%= obj.text.substr(0,10).concat("...") %></blockquote>
                 <p><%= obj.user + " | " + obj.time %></p>
             </div>
             <% }) %>
         </div>
     </div>
-
     <%- include("footer") -%>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        var socket = io();
-
-        function reload() {
-            location.reload();
-        }
-
-        socket.on("reload", function () {
-            var div = document.getElementById("reload");
-            div.style.display = "block";
-        });
-    </script>
-
 </body>
 
 </html>

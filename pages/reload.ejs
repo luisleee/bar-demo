@@ -1,3 +1,29 @@
 <div id="reload">
-    <p>New message! Click <a href="javascript:void(0)" onclick="reload()">here</a> to reload.</p>
+    <div>
+        <p>New message! Click <a href="javascript:void(0)" onclick="reload()">here</a> to reload.</p>
+    </div>
+    <div id="reload-cross">
+        <p><a href="javascript:void(0)" onclick="closeReload()">x</a></p>
+    </div>
 </div>
+
+<script>
+    var socket = io();
+
+    function reload() {
+        location.reload();
+    }
+
+    function closeReload() {
+        var div = document.getElementById("reload");
+        div.style.display = "none";
+    }
+
+    socket.on("reload " + location.pathname, function (user) {
+        if (user === "<%= username %>") {
+            return;
+        }
+        var div = document.getElementById("reload");
+        div.style.display = "flex";
+    });
+</script>

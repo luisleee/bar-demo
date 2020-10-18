@@ -1,8 +1,8 @@
-#messages {
+#topics {
     margin-top: 10px;
 }
 
-.msg {
+.topic {
     margin: 5px 0;
     padding: 5px 15px 5px 15px;
     border: 5px solid;
@@ -10,11 +10,11 @@
     overflow: auto;
 }
 
-.msg:hover {
+.topic:hover {
     background-color: azure;
 }
 
-.msg p:first-of-type {
+.topic p:first-of-type {
     font-weight: bold;
 }
 

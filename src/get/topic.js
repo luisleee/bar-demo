@@ -1,12 +1,12 @@
 const { Database } = require("sqlite3");
 const { join } = require("path");
-function message(req, res, next) {
+function topic(req, res, next) {
     var id = req.params.id;
     var messagesDB = new Database("messages.db", function (err) {
         if (err) {
             return next(err);
         }
-        messagesDB.get("SELECT * FROM messages WHERE id = ?", id, function (
+        messagesDB.get("SELECT * FROM topics WHERE id = ?", id, function (
             err,
             row
         ) {
@@ -17,7 +17,7 @@ function message(req, res, next) {
                 res.redirect("/404.html");
                 return;
             }
-            var context = { message: row };
+            var context = { topic: row };
             messagesDB.all("SELECT * FROM replies WHERE fa = ?", id, function (
                 err,
                 rows
@@ -26,9 +26,9 @@ function message(req, res, next) {
                     return next(err);
                 }
                 context.replies = rows;
-                res.render(join(__dirname, "../../pages/p.ejs"), context);
+                res.render(join(__dirname, "../../pages/topic.ejs"), context);
             });
         });
     });
 }
-module.exports = message;
+module.exports = topic;
