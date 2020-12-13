@@ -1,0 +1,27 @@
+form {
+    padding: 0;
+    line-height: 10px;
+    overflow: hidden;
+}
+
+button {
+    height: 40px;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    background: #efefef;
+    cursor: pointer;
+    outline: none;
+    color: black;
+    font-size: 17px;
+    margin: 5px;
+}
+
+button:hover {
+    background: #dfdfdf;
+}
+
+.dangerous {
+    color: #CD4432;
+}

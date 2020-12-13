@@ -20,6 +20,8 @@ header {
     position: relative;
     width: 40%;
     left: 30%;
+    height: 85%;
+    top: 5%;
 
     background-color: azure;
     box-shadow: 5px 5px 5px #888888;
@@ -31,10 +33,6 @@ header {
     position: relative;
     left: 25%;
     width: 50%;
-}
-
-footer {
-    text-align: center;
 }
 
 footer a {

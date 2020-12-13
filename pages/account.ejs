@@ -3,32 +3,42 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Account Center</title>
+    <title>Account Center | bar-demo</title>
+    <link type="text/css" rel="stylesheet" href="/account.css">
+    <link type="text/css" rel="stylesheet" href="/header.css">
+    <link type="text/css" rel="stylesheet" href="/footer.css">
+    <link type="text/css" rel="stylesheet" href="/generic.css">
 </head>
 
 <body>
-    <h1>Account Center</h1>
-    <p><a href="/">Back to home</a></p>
-    <hr>
-    <p>Username: <%- name %></p>
-    <p><a href="/logout">logout</a></p>
+    <%- include("header") -%>
+    <div id="mainbox">
+        <h1>Account Center</h1>
+        <hr class="colorful">
 
-    <form action="/change-password" method="POST">
-        <fieldset>
-            <legend>Change Password</legend>
-            <p>Old password:<input type="password" name="oldPass"></p>
-            <p>New password:<input type="password" name="newPass"></p>
-            <button>Change</button>
-        </fieldset>
-    </form>
+        <p>Username: <strong><%- name %></strong></p>
+        <form action="/logout" method="GET">
+            <button type="submit">Logout</button>
+        </form>
+        <hr>
 
-    <form action="/delete" method="POST">
-        <fieldset style="color: red;">
-            <legend>Dangerous Zone</legend>
-            <button>Delete Account</button>
-        </fieldset>
-    </form>
 
+        <h2>Change Password</h2>
+        <hr>
+        <form action="/change-password" method="POST">
+            <p>Old password: <input type="password" name="oldPass"></p>
+            <p>New password: <input type="password" name="newPass"></p>
+            <button type="submit">Change</button>
+        </form>
+
+        <h2 class="dangerous">Dangerous Zone</h2>
+        <hr>
+        <p>Are you sure that you want to delete your account?</p>
+        <form action="/delete-user" method="POST">
+            <button type="submit" class="dangerous">Delete Account</button>
+        </form>
+    </div>
+    <%- include("footer") -%>
 </body>
 
 </html>

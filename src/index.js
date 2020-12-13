@@ -67,8 +67,7 @@ app.post("/login", login);
 app.post("/register", register);
 
 // Delete user
-// TODO: Change the URL later
-app.post("/delete", isLogin, deleteUser);
+app.post("/delete-user", isLogin, deleteUser);
 
 // Change password
 app.post("/change-password", isLogin, changePassword);
@@ -100,5 +99,6 @@ init(function (err) {
     }
     server.listen("3000", function () {
         console.log("OK");
+        console.log("Listening on http://localhost:3000/");
     });
 });

@@ -6,7 +6,7 @@ a:visited {
     text-decoration: none;
 }
 
-hr {
+hr.colorful {
     margin: 15px 0;
     border: 0;
     height: 4px;
