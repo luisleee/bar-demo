@@ -11,6 +11,11 @@ header h1 {
     line-height: 90px;
 }
 
+header p {
+    margin: 0;
+    line-height: 90px;
+}
+
 header a {
     color: black;
 }

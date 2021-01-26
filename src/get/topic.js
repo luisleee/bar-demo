@@ -1,5 +1,4 @@
 const { Database } = require("sqlite3");
-const { join } = require("path");
 
 function topic(req, res, next) {
     var id = req.params.id;
@@ -27,10 +26,7 @@ function topic(req, res, next) {
                             return next(err);
                         }
                         context.replies = rows;
-                        res.render(
-                            join(__dirname, "../../pages/topic.ejs"),
-                            context
-                        );
+                        res.render("topic.ejs", context);
                     }
                 );
             }
