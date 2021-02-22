@@ -22,9 +22,9 @@ const changePassword = require("./post/changePassword");
 const account = require("./get/account");
 const send = require("./post/send");
 
-var app = express();
-var server = http.createServer(app);
-var io = socketIO(server);
+let app = express();
+let server = http.createServer(app);
+let io = socketIO(server);
 emitter.setEmitter(io);
 
 app.use(logger("dev"));

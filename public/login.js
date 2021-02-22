@@ -1,8 +1,8 @@
 (function () {
-    var tabLogin = document.getElementById("tab-login");
-    var tabRegister = document.getElementById("tab-register");
-    var login = document.getElementById("login");
-    var register = document.getElementById("register");
+    let tabLogin = document.getElementById("tab-login");
+    let tabRegister = document.getElementById("tab-register");
+    let login = document.getElementById("login");
+    let register = document.getElementById("register");
     tabLogin.addEventListener(
         "click",
         () => {

@@ -1,6 +1,6 @@
 const { Database } = require("sqlite3");
 function homepage(req, res, next) {
-    var messagesDB = new Database("messages.db", function (err) {
+    let messagesDB = new Database("messages.db", function (err) {
         if (err) {
             return next(err);
         }
@@ -8,7 +8,7 @@ function homepage(req, res, next) {
             if (err) {
                 return next(err);
             }
-            var data = {
+            let data = {
                 username: req.session.name,
                 topics: rows.reverse(),
             };

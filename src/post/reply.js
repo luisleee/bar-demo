@@ -2,11 +2,11 @@ const { Database } = require("sqlite3");
 const timer = require("../util/timer");
 const emitter = require("../util/emitter");
 function reply(req, res, next) {
-    var id = req.params.id;
-    var user = req.session.name;
-    var msg = req.body.message;
-    var time = timer();
-    var messagesDB = new Database("messages.db", function (err) {
+    let id = req.params.id;
+    let user = req.session.name;
+    let msg = req.body.message;
+    let time = timer();
+    let messagesDB = new Database("messages.db", function (err) {
         if (err) {
             return next(err);
         }

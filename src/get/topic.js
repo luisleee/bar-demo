@@ -1,8 +1,8 @@
 const { Database } = require("sqlite3");
 
 function topic(req, res, next) {
-    var id = req.params.id;
-    var messagesDB = new Database("messages.db", function (err) {
+    let id = req.params.id;
+    let messagesDB = new Database("messages.db", function (err) {
         if (err) {
             return next(err);
         }
@@ -17,7 +17,7 @@ function topic(req, res, next) {
                     res.redirect("/404.html");
                     return;
                 }
-                var context = { topic: row, username: req.session.name };
+                let context = { topic: row, username: req.session.name };
                 messagesDB.all(
                     "SELECT * FROM replies WHERE fa = ?",
                     id,

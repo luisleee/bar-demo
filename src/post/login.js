@@ -1,7 +1,7 @@
 const { Database } = require("sqlite3");
 const md5 = require("md5");
 function login(req, res, next) {
-    var usersDB = new Database("users.db", function (err) {
+    let usersDB = new Database("users.db", function (err) {
         if (err) {
             return next(err);
         }
@@ -13,7 +13,7 @@ function login(req, res, next) {
                     return next(err);
                 }
                 if (!row || row.password !== md5(req.body.password)) {
-                    var qstr = qs.stringify({
+                    let qstr = qs.stringify({
                         time: 1,
                         text: "Bad username or password!!!",
                         url: "/",

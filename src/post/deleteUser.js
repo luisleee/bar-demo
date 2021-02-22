@@ -1,6 +1,6 @@
 const { Database } = require("sqlite3");
 function deleteUser(req, res, next) {
-    var usersDB = new Database("users.db", function (err) {
+    let usersDB = new Database("users.db", function (err) {
         if (err) {
             return next(err);
         }

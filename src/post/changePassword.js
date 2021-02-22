@@ -2,7 +2,7 @@ const qs = require("querystring");
 const { Database } = require("sqlite3");
 function changePassword(req, res, next) {
     if (!req.body.oldPass || !req.body.newPass) {
-        var qstr = qs.stringify({
+        let qstr = qs.stringify({
             time: 1,
             text: "No password",
             url: "/account",
@@ -10,7 +10,7 @@ function changePassword(req, res, next) {
         res.redirect("/redirect?" + qstr);
         return;
     }
-    var usersDB = new Database("users.db", function (err) {
+    let usersDB = new Database("users.db", function (err) {
         if (err) {
             return next(err);
         }
@@ -25,7 +25,7 @@ function changePassword(req, res, next) {
                     return next(err);
                 }
                 if (row.password !== md5(req.body.oldPass)) {
-                    var qstr = qs.stringify({
+                    let qstr = qs.stringify({
                         time: 1,
                         text: "Bad password",
                         url: "/account",
@@ -41,7 +41,7 @@ function changePassword(req, res, next) {
                         if (err) {
                             return next(err);
                         }
-                        var qstr = qs.stringify({
+                        let qstr = qs.stringify({
                             time: 1,
                             text: "Password changed!",
                             url: "/account",

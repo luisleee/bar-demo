@@ -4,7 +4,7 @@ const exists = fs.existsSync;
 
 function initUsers(fn) {
     if (!exists("users.db")) {
-        var DB = new Database("users.db", function (err) {
+        let DB = new Database("users.db", function (err) {
             if (err) {
                 return fn(err);
             }
@@ -30,7 +30,7 @@ function initUsers(fn) {
 
 function initMessages(fn) {
     if (!exists("messages.db")) {
-        var DB = new Database("messages.db", function (err) {
+        let DB = new Database("messages.db", function (err) {
             if (err) {
                 return fn(err);
             }
@@ -69,7 +69,7 @@ function initMessages(fn) {
 }
 
 function init(fn) {
-    var promiseUsers = new Promise(function (res, rej) {
+    let promiseUsers = new Promise(function (res, rej) {
         initUsers(function (err) {
             if (err) {
                 rej(err);
@@ -78,7 +78,7 @@ function init(fn) {
             }
         });
     });
-    var promiseMessages = new Promise(function (res, rej) {
+    let promiseMessages = new Promise(function (res, rej) {
         initMessages(function (err) {
             if (err) {
                 rej(err);

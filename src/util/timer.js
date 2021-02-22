@@ -1,14 +1,14 @@
 function timer() {
-    var now = new Date();
-    var year = now.getFullYear();
-    var month = now.getMonth() + 1;
-    var date = now.getDate();
-    var hour = now.getHours();
-    var minute = now.getMinutes() + 1;
-    var second = now.getSeconds() + 1;
+    let now = new Date();
+    let year = now.getFullYear();
+    let month = now.getMonth() + 1;
+    let date = now.getDate();
+    let hour = now.getHours();
+    let minute = now.getMinutes() + 1;
+    let second = now.getSeconds() + 1;
 
-    var dateString = [year, month, date].join("-");
-    var timeString = [hour, minute, second].join(":");
+    let dateString = [year, month, date].join("-");
+    let timeString = [hour, minute, second].join(":");
     return dateString + " " + timeString;
 }
 

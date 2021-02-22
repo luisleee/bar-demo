@@ -2,7 +2,7 @@ const md5 = require("md5");
 const qs = require("querystring");
 const { Database } = require("sqlite3");
 function register(req, res, next) {
-    var usersDB = new Database("users.db", function (err) {
+    let usersDB = new Database("users.db", function (err) {
         if (err) {
             return next(err);
         }
@@ -17,7 +17,7 @@ function register(req, res, next) {
                     return next(err);
                 }
                 if (row) {
-                    var url = qs.stringify({
+                    let url = qs.stringify({
                         time: 1,
                         text: "User already exists!!!",
                         url: "/",
@@ -32,7 +32,7 @@ function register(req, res, next) {
                             if (err) {
                                 return next(err);
                             }
-                            var qstr = qs.stringify({
+                            let qstr = qs.stringify({
                                 time: 1,
                                 text: "Registered",
                                 url: "/",

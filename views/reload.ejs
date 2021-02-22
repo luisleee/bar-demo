@@ -8,14 +8,14 @@
 </div>
 
 <script>
-    var socket = io();
+    let socket = io();
 
     function reload() {
         location.reload();
     }
 
     function closeReload() {
-        var div = document.getElementById("reload");
+        let div = document.getElementById("reload");
         div.style.display = "none";
     }
 
@@ -23,7 +23,7 @@
         if (user === "<%= username %>") {
             return;
         }
-        var div = document.getElementById("reload");
+        let div = document.getElementById("reload");
         div.style.display = "flex";
     });
 </script>

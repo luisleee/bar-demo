@@ -1,15 +1,15 @@
-var emitter = require("./../util/emitter");
-var timer = require("./../util/timer");
+let emitter = require("./../util/emitter");
+let timer = require("./../util/timer");
 const { Database } = require("sqlite3");
 function send(req, res, next) {
-    var messagesDB = new Database("messages.db", function (err) {
+    let messagesDB = new Database("messages.db", function (err) {
         if (err) {
             return next(err);
         }
-        var user = req.session.name;
-        var title = req.body.title;
-        var text = req.body.text;
-        var time = timer();
+        let user = req.session.name;
+        let title = req.body.title;
+        let text = req.body.text;
+        let time = timer();
 
         if (!text) {
             return next(err);
